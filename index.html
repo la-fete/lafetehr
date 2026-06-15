@@ -141,7 +141,7 @@
     // ===== Load App in Iframe =====
     (function(){
       var frame=document.getElementById('appFrame');
-      var baseUrl='https://script.google.com/macros/s/AKfycbxxcV2-tQullNn4QgT4-Glc8eFwJo5eay-jdiLu3FfmiCDCNr7t0X8CQV1fAcNAdJpZrw/exec';
+      var baseUrl='https://script.google.com/macros/s/AKfycbwKR16yEaMjHSaHhfuLVpwLkgkGuYJVXkyTWO0Z-zk4yHxLaR4c9ZHmMIgiR55vAXF2sA/exec';
       var params=new URLSearchParams(window.location.search);
       var token=params.get('token');
       frame.src=token?baseUrl+'?token='+encodeURIComponent(token):baseUrl;
