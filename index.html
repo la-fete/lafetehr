@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0a12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="لافيت">
+  <title>لافيت - نظام إدارة المخزون</title>
+  <link rel="manifest" id="pwaManifest" href="data:application/manifest+json,{}">
+  <script>
+    (function(){
+      function genIcon(size) {
+        var c=document.createElement('canvas'),s=size;
+        c.width=c.height=s; var ctx=c.getContext('2d'), r=s*0.22;
+        ctx.beginPath(); ctx.moveTo(r,0); ctx.lineTo(s-r,0);
+        ctx.quadraticCurveTo(s,0,s,r); ctx.lineTo(s,s-r);
+        ctx.quadraticCurveTo(s,s,s-r,s); ctx.lineTo(r,s);
+        ctx.quadraticCurveTo(0,s,0,s-r); ctx.lineTo(0,r);
+        ctx.quadraticCurveTo(0,0,r,0); ctx.closePath();
+        var bg=ctx.createLinearGradient(0,0,0,s);
+        bg.addColorStop(0,'#0a0a12');bg.addColorStop(0.5,'#0f3460');bg.addColorStop(1,'#2196f3');
+        ctx.fillStyle=bg;ctx.fill();
+        ctx.fillStyle='rgba(255,255,255,0.92)';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.font='bold '+(s*0.46)+'px system-ui,sans-serif';
+        ctx.fillText('ل',s/2,s*0.52);
+        ctx.font='bold '+(s*0.24)+'px system-ui,sans-serif';
+        ctx.fillStyle='rgba(255,255,255,0.35)';
+        ctx.fillText('LA FÊTE',s/2,s*0.84);
+        return c.toDataURL('image/png');
+      }
+      var i192=genIcon(192),i512=genIcon(512);
+      var lnk=document.createElement('link');
+      lnk.rel='apple-touch-icon';lnk.href=i512;
+      document.head.appendChild(lnk);
+      var m={
+        name:'لافيت - نظام إدارة المخزون',short_name:'لافيت',
+        description:'نظام إدارة مخزون الأفراح',
+        start_url:'.',display:'standalone',
+        background_color:'#05050a',theme_color:'#0a0a12',
+        dir:'rtl',lang:'ar',
+        icons:[{src:i192,sizes:'192x192',type:'image/png'},{src:i512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]
+      };
+      document.getElementById('pwaManifest').href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m));
+      window.__pwaIcons={192:i192,512:i512};
+    })();
+  </script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{width:100%;height:100%;overflow:hidden;background:#0a0a12;font-family:system-ui,sans-serif}
+    #splash{
+      position:fixed;inset:0;z-index:9999;
+      background:linear-gradient(135deg,#0a0a12,#0f3460);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      transition:opacity .5s ease,transform .5s ease
+    }
+    #splash.hide{opacity:0;transform:scale(1.05);pointer-events:none}
+    .sp-icon{
+      width:96px;height:96px;border-radius:24px;
+      background:linear-gradient(135deg,#2196f3,#0f3460);
+      display:flex;align-items:center;justify-content:center;
+      font-size:48px;color:#fff;font-weight:bold;margin-bottom:20px;
+      box-shadow:0 20px 60px rgba(33,150,243,.3);
+      animation:pulse 2s infinite
+    }
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .sp-title{color:#fff;font-size:22px;font-weight:700;margin-bottom:4px}
+    .sp-sub{color:#90caf9;font-size:12px;margin-bottom:30px}
+    .sp-load{width:120px;height:3px;background:#1a1a3e;border-radius:4px;overflow:hidden}
+    .sp-bar{height:100%;background:linear-gradient(90deg,#2196f3,#fff);animation:load 1.5s forwards}
+    @keyframes load{0%{width:0%}100%{width:100%}}
+    iframe{width:100%;height:100%;border:none;display:none}
+    iframe.show{display:block}
+    #installBanner{
+      position:fixed;bottom:0;left:0;right:0;z-index:10001;
+      background:rgba(10,10,18,.95);backdrop-filter:blur(12px);
+      padding:16px 20px 20px;border-radius:20px 20px 0 0;
+      transform:translateY(100%);transition:transform .4s cubic-bezier(.22,1,.36,1),visibility .4s,opacity .4s;
+      box-shadow:0 -8px 40px rgba(0,0,0,.5);
+      visibility:hidden;opacity:0;display:flex;align-items:center;gap:14px
+    }
+    #installBanner.show{visibility:visible;opacity:1;transform:translateY(0)}
+    #installBanner .ib-icon{
+      width:56px;height:56px;border-radius:14px;flex-shrink:0;
+      background:linear-gradient(135deg,#2196f3,#0f3460);
+      display:flex;align-items:center;justify-content:center;
+      font-size:28px;color:#fff;font-weight:bold
+    }
+    #installBanner .ib-text{flex:1;min-width:0}
+    #installBanner .ib-name{color:#fff;font-size:15px;font-weight:700}
+    #installBanner .ib-desc{color:#90caf9;font-size:12px;margin-top:2px}
+    #installBanner .ib-install{
+      background:#2196f3;color:#fff;border:none;border-radius:12px;
+      padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;
+      white-space:nowrap;transition:background .2s
+    }
+    #installBanner .ib-install:hover{background:#1976d2}
+    #installBanner .ib-close{
+      background:none;border:none;color:#64748b;font-size:20px;
+      cursor:pointer;padding:4px;line-height:1;flex-shrink:0
+    }
+    #installBanner .ib-close:hover{color:#fff}
+    #offline{
+      position:fixed;inset:0;z-index:10000;background:#0a0a12;
+      display:none;flex-direction:column;align-items:center;justify-content:center;
+      color:#fff;text-align:center;padding:40px
+    }
+    #offline.show{display:flex}
+    .off-icon{font-size:64px;margin-bottom:20px}
+    .retry-btn{
+      margin-top:24px;padding:12px 32px;background:#2196f3;color:#fff;
+      border:none;border-radius:12px;font-size:16px;cursor:pointer;font-weight:bold
+    }
+  </style>
+</head>
+<body>
+  <div id="splash">
+    <div class="sp-icon">ل</div>
+    <div class="sp-title">لافيت</div>
+    <div class="sp-sub">نظام إدارة المخزون - La Fête</div>
+    <div class="sp-load"><div class="sp-bar"></div></div>
+  </div>
+  <div id="installBanner">
+    <div class="ib-icon">ل</div>
+    <div class="ib-text">
+      <div class="ib-name">لافيت</div>
+      <div class="ib-desc">أضف التطبيق إلى شاشتك الرئيسية للوصول السريع</div>
+    </div>
+    <button class="ib-install" id="installBtn">تثبيت</button>
+    <button class="ib-close" id="installClose">✕</button>
+  </div>
+  <div id="offline">
+    <div class="off-icon">📡</div>
+    <h2 style="margin-bottom:12px">لا يوجد اتصال</h2>
+    <p style="color:#90caf9">يتطلب التطبيق اتصالاً بالإنترنت</p>
+    <button class="retry-btn" onclick="location.reload()">إعادة المحاولة</button>
+  </div>
+  <iframe id="appFrame" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+  <script>
+    // ===== Load App in Iframe =====
+    (function(){
+      var frame=document.getElementById('appFrame');
+      var baseUrl='https://script.google.com/macros/s/AKfycbzD4-CURiBAW740BitvqzXE3ojdTksEuxd2t27xX2ARgbGWX62qpfreVESDh2PJ7dk/exec';
+      var params=new URLSearchParams(window.location.search);
+      var token=params.get('token');
+      frame.src=token?baseUrl+'?token='+encodeURIComponent(token):baseUrl;
+      var splash=document.getElementById('splash');
+      frame.onload=function(){
+        splash.classList.add('hide');
+        frame.classList.add('show');
+        setTimeout(function(){splash.style.display='none'},600);
+      };
+    })();
+
+    // ===== Install Prompt =====
+    (function(){
+      var deferredPrompt, banner=document.getElementById('installBanner');
+      window.addEventListener('beforeinstallprompt',function(e){
+        e.preventDefault();deferredPrompt=e;
+        banner.classList.add('show');
+      });
+      document.getElementById('installBtn').addEventListener('click',function(){
+        if(!deferredPrompt)return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function(res){
+          if(res.outcome==='accepted')banner.classList.remove('show');
+          deferredPrompt=null;
+        });
+      });
+      document.getElementById('installClose').addEventListener('click',function(){banner.classList.remove('show')});
+      window.addEventListener('appinstalled',function(){banner.classList.remove('show')});
+    })();
+
+    // ===== Service Worker =====
+    (function(){
+      if('serviceWorker'in navigator){
+        navigator.serviceWorker.register('sw.js').then(function(reg){
+          console.log('SW registered:',reg.scope);
+          reg.addEventListener('updatefound',function(){console.log('New update available')});
+        }).catch(function(err){console.log('SW registration skipped:',err.message)});
+      }
+    })();
+
+    // ===== Connection Status =====
+    window.addEventListener('offline',function(){document.getElementById('offline').classList.add('show')});
+    window.addEventListener('online',function(){document.getElementById('offline').classList.remove('show')});
+  </script>
+</body>
+</html>
