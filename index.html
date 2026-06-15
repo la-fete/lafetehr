@@ -116,13 +116,13 @@
 </head>
 <body>
   <div id="splash">
-    <div class="sp-icon">لافيت</div>
+    <div class="sp-icon">ل</div>
     <div class="sp-title">لافيت موظفين</div>
     <div class="sp-sub">نظام إدارة الموظفين - La Fête</div>
     <div class="sp-load"><div class="sp-bar"></div></div>
   </div>
   <div id="installBanner">
-    <div class="ib-icon">لافيت</div>
+    <div class="ib-icon">ل</div>
     <div class="ib-text">
       <div class="ib-name">لافيت موظفين</div>
       <div class="ib-desc">أضف التطبيق إلى شاشتك الرئيسية للوصول السريع</div>
@@ -136,55 +136,71 @@
     <p style="color:#90caf9">يتطلب التطبيق اتصالاً بالإنترنت</p>
     <button class="retry-btn" onclick="location.reload()">إعادة المحاولة</button>
   </div>
+  
   <iframe id="appFrame" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+
   <script>
-    // ===== Load App in Iframe =====
+    // ===== تحميل التطبيق في الإطار المحدث والآمن =====
     (function(){
-      var frame=document.getElementById('appFrame');
-      var baseUrl='https://script.google.com/macros/s/AKfycbwKR16yEaMjHSaHhfuLVpwLkgkGuYJVXkyTWO0Z-zk4yHxLaR4c9ZHmMIgiR55vAXF2sA/exec';
-      var params=new URLSearchParams(window.location.search);
-      var token=params.get('token');
-      frame.src=token?baseUrl+'?token='+encodeURIComponent(token):baseUrl;
-      var splash=document.getElementById('splash');
-      frame.onload=function(){
+      var frame = document.getElementById('appFrame');
+      // الرابط الأساسي لتطبيق السكريبت الخاص بك
+      var baseUrl = 'https://script.google.com/macros/s/AKfycbwKR16yEaMjHSaHhfuLVpwLkgkGuYJVXkyTWO0Z-zk4yHxLaR4c9ZHmMIgiR55vAXF2sA/exec';
+      var params = new URLSearchParams(window.location.search);
+      var token = params.get('token');
+      
+      // دمج التوكين بالرابط إن وجد بذكاء وأمان
+      frame.src = token ? baseUrl + '?token=' + encodeURIComponent(token) : baseUrl;
+      
+      var splash = document.getElementById('splash');
+      
+      // إدارة إخفاء شاشة التحميل بمجرد استجابة السيرفر وتخطي الحظر
+      frame.onload = function(){
         splash.classList.add('hide');
         frame.classList.add('show');
-        setTimeout(function(){splash.style.display='none'},600);
+        setTimeout(function(){ splash.style.display = 'none'; }, 600);
       };
     })();
 
-    // ===== Install Prompt =====
+    // ===== نافذة التثبيت الذكية للتطبيق (PWA Install Prompt) =====
     (function(){
-      var deferredPrompt, banner=document.getElementById('installBanner');
-      window.addEventListener('beforeinstallprompt',function(e){
-        e.preventDefault();deferredPrompt=e;
+      var deferredPrompt, banner = document.getElementById('installBanner');
+      window.addEventListener('beforeinstallprompt', function(e){
+        e.preventDefault(); deferredPrompt = e;
         banner.classList.add('show');
       });
-      document.getElementById('installBtn').addEventListener('click',function(){
-        if(!deferredPrompt)return;
+      document.getElementById('installBtn').addEventListener('click', function(){
+        if(!deferredPrompt) return;
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(function(res){
-          if(res.outcome==='accepted')banner.classList.remove('show');
-          deferredPrompt=null;
+          if(res.outcome === 'accepted') banner.classList.remove('show');
+          deferredPrompt = null;
         });
       });
-      document.getElementById('installClose').addEventListener('click',function(){banner.classList.remove('show')});
-      window.addEventListener('appinstalled',function(){banner.classList.remove('show')});
+      document.getElementById('installClose').addEventListener('click', function(){ banner.classList.remove('show'); });
+      window.addEventListener('appinstalled', function(){ banner.classList.remove('show'); });
     })();
 
-    // ===== Service Worker =====
+    // ===== تسجيل السيرفس وركر (Service Worker Registration) =====
     (function(){
-      if('serviceWorker'in navigator){
-        navigator.serviceWorker.register('sw.js').then(function(reg){
-          console.log('SW registered:',reg.scope);
-          reg.addEventListener('updatefound',function(){console.log('New update available')});
-        }).catch(function(err){console.log('SW registration skipped:',err.message)});
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('sw.js').then(function(reg) {
+            console.log('SW Registered successfully with scope:', reg.scope);
+            
+            // التحقق من وجود تحديثات للملفات في الخلفية
+            reg.addEventListener('updatefound', function() {
+              console.log('A new update is available for Lafitte PWA.');
+            });
+          }).catch(function(err) {
+            console.log('SW registration failed/skipped:', err.message);
+          });
+        });
       }
     })();
 
-    // ===== Connection Status =====
-    window.addEventListener('offline',function(){document.getElementById('offline').classList.add('show')});
-    window.addEventListener('online',function(){document.getElementById('offline').classList.remove('show')});
+    // ===== مراقبة حالة اتصال جهاز المستخدم بالإنترنت =====
+    window.addEventListener('offline', function(){ document.getElementById('offline').classList.add('show'); });
+    window.addEventListener('online', function(){ document.getElementById('offline').classList.remove('show'); });
   </script>
 </body>
 </html>
